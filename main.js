@@ -1,3 +1,7 @@
+// Get display element
+const display = document.querySelector(".display");
+
+
 // Set initial variables
 let firstNum = null;
 let secondNum = null;
@@ -59,7 +63,7 @@ const handleOperatorInput = (op) => {
     doCalculation();
   }
   operator = op;
-  updateDisplay("0");
+  updateDisplay("");
 };
 
 // Add event listeners
@@ -81,5 +85,3 @@ document.querySelector(".decimal").addEventListener("click", () => {
   }
 });
 
-// Get display element
-const display = document.querySelector(".display");
