@@ -1,7 +1,6 @@
 // Get display element
 const display = document.querySelector(".display");
 
-
 // Set initial variables
 let firstNum = null;
 let secondNum = null;
@@ -31,6 +30,28 @@ const acClear = () => {
   firstNum = null;
   secondNum = null;
   operator = null;
+};
+
+const toggle = () => {
+  let currentValue = parseFloat(display.textContent);
+  let toggledValue = currentValue * -1;
+  updateDisplay(toggledValue);
+  if (operator === null) {
+    firstNum = toggledValue;
+  } else {
+    secondNum = toggledValue;
+  }
+};
+
+const percentage = () => {
+  let currentValue = parseFloat(display.textContent);
+  let percentValue = currentValue/100
+  updateDisplay(percentValue)
+  if (operator === null) {
+    firstNum =percentValue;
+  } else {
+    secondNum = percentValue;
+  }
 };
 
 // Perform calculation
@@ -84,4 +105,5 @@ document.querySelector(".decimal").addEventListener("click", () => {
     updateDisplay(display.textContent + ".");
   }
 });
-
+document.querySelector(".toggle").addEventListener("click", toggle);
+document.querySelector(".percent").addEventListener("click", percentage);
