@@ -1,56 +1,85 @@
-let firstNum;
-let secondNum;
-let display = document.querySelector(".display");
+// Set initial variables
+let firstNum = null;
+let secondNum = null;
+let operator = null;
 
-// define mathematical functions
-const addition = function (firstNum, secondNum) {
-  return firstNum + secondNum;
-};
-const subtract = function (firstNum, secondNum) {
-  return firstNum - secondNum;
-};
-const multiply = function (firstNum, secondNum) {
-  return firstNum * secondNum;
-};
-const divide = function (firstNum, secondNum) {
-  return firstNum / secondNum;
+// Define calculation functions
+const calculations = {
+  "+": (a, b) => a + b,
+  "-": (a, b) => a - b,
+  "/": (a, b) => (b !== 0 ? a / b : "Error"),
+  "*": (a, b) => a * b,
 };
 
-const clearScreen = function () {
-  display.textContent = "";
+// Function to update display
+const updateDisplay = (value) => {
+  display.textContent = value;
 };
 
-const acClear = function () {
-  display.textContent = 0;
-  firstNum = 0;
-  secondNum = 0;
+// Clear screen function
+const clearScreen = () => {
+  updateDisplay("");
 };
 
-// add number button event listeners
-numberButtons = document.querySelectorAll(".num");
-for (let button of numberButtons) {
-  button.addEventListener("click", function () {
-    if (display.textContent == 0) {
-      clearScreen();
-    }
-    let digit = button.textContent;
-    display.textContent += digit;
-  });
-}
+// Reset calculator function
+const acClear = () => {
+  updateDisplay("0");
+  firstNum = null;
+  secondNum = null;
+  operator = null;
+};
 
-// add other button event listeners
-let acButton = document.querySelector(".clear");
-acButton.addEventListener("click", acClear);
+// Perform calculation
+const doCalculation = () => {
+  if (firstNum !== null && operator) {
+    secondNum = parseFloat(display.textContent);
+    const operation = calculations[operator];
+    const result = operation(firstNum, secondNum);
+    updateDisplay(result);
+    firstNum = result;
+    secondNum = null;
+    operator = null;
+  }
+};
 
-let addButton = document.querySelector(".add")
-let divideButton = document.querySelector(".divide")
-let multiplyButton = document.querySelector(".multiply")
-let subtractButton = document.querySelector(".subtract")
+// Handle number input
+const handleNumberInput = (digit) => {
+  if (display.textContent === "0" || operator === "=") {
+    updateDisplay(digit);
+  } else {
+    updateDisplay(display.textContent + digit);
+  }
+};
 
-const operators = [addButton, divideButton, multiplyButton, subtractButton]
-for(let op of operators){
-    op.addEventListener("click", function(){
-        firstNum = parseInt(display.textContent)
-        console.log(firstNum)
-    })
-}
+// Handle operator input
+const handleOperatorInput = (op) => {
+  if (firstNum === null) {
+    firstNum = parseFloat(display.textContent);
+  } else if (operator) {
+    doCalculation();
+  }
+  operator = op;
+  updateDisplay("0");
+};
+
+// Add event listeners
+document.querySelectorAll(".num").forEach((button) => {
+  button.addEventListener("click", () => handleNumberInput(button.textContent));
+});
+
+document.querySelectorAll(".operator").forEach((button) => {
+  button.addEventListener("click", () =>
+    handleOperatorInput(button.textContent)
+  );
+});
+
+document.querySelector(".equals").addEventListener("click", doCalculation);
+document.querySelector(".clear").addEventListener("click", acClear);
+document.querySelector(".decimal").addEventListener("click", () => {
+  if (!display.textContent.includes(".")) {
+    updateDisplay(display.textContent + ".");
+  }
+});
+
+// Get display element
+const display = document.querySelector(".display");
